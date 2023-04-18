@@ -1,24 +1,19 @@
-
 from fastapi import FastAPI
-from enum import Enum
-
-class ModelName(str, Enum):
-    alexnet = "alexnet"
-    resnet = "resnet"
-    lenet = "lenet"
-
+from starlette.config import Config
+from auth.router import api_router as api_auth
+from config import settings
 app = FastAPI()
 
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
 
-@app.get("/models/{model_name}")
-async def get_model(model_name: ModelName):
-    if model_name is ModelName.alexnet:
-        return {"model_name": model_name, "message": "Deep Learning FTW!"}
+print(settings.dict())
+config = Config(".env")  # parse .env file for env variables
 
-    if model_name.value == "lenet":
-        return {"model_name": model_name, "message": "LeCNN all the images"}
+ENVIRONMENT = config("ENVIRONMENT")  # get current env name
+SHOW_DOCS_ENVIRONMENT = ("local", "staging")  # explicit list of allowed envs
 
-    return {"model_name": model_name, "message": "Have some residuals"}
+app_configs = {"title": "Support Ticket App"}
+if ENVIRONMENT not in SHOW_DOCS_ENVIRONMENT:
+    app_configs["openapi_url"] = None  # set url for docs as null
+
+app = FastAPI(**app_configs)
+app.include_router(api_auth, prefix="/auth", tags=["auth"])
