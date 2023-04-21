@@ -7,7 +7,17 @@ from pydantic import BaseModel
 
 class Role(BaseModel):
     id: Column(Integer, primary_key=True, index=True)
-    name: Column(String, index=True)
+    title: Column(String, index=True)
+    slug: Column(String)
+    created_at: datetime.datetime
+    updated_at: datetime.datetime | None = None
+    deleted_at: datetime.datetime | None = None
+
+
+class Permission(BaseModel):
+    id: Column(Integer, primary_key=True, index=True)
+    title: Column(String, index=True)
+    slug: Column(String)
     created_at: datetime.datetime
     updated_at: datetime.datetime | None = None
     deleted_at: datetime.datetime | None = None
@@ -16,8 +26,7 @@ class Role(BaseModel):
 class User(BaseModel):
     id: Column(Integer, primary_key=True, index=True)
     full_name: Column(String, index=True)
-    email: Column(String, unique=True, index=True, nullable=False)
-    password: Column(String, nullable=False)
+    message: Column(String, unique=True, index=True, nullable=False)
     is_active: Column(Boolean(), default=True)
     roles = relationship("Role", back_populates="owner")
     # permission_id = Column(Integer, ForeignKey("user.id"))
