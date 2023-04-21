@@ -46,7 +46,7 @@ A Online Support Ticketing of using Fast API in Python.
    Additionally create a `support-tikect_dev` database with user `**fast_api**` having required privileges.
    OR
    Change the DATABASE_URL variable in the **.env** file inside then `app` folder to reflect database settings (user:password/db)
-```
+
 
  
 
